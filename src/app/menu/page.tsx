@@ -10,7 +10,7 @@ const menuPage = (props: Props) => {
         {menu?.map((item, index) => (
           <Link
             key={index}
-            href={"#"}
+            href={`/menu/${item?.title}`}
             className="p-4"
             style={{
               backgroundImage: `url(${item?.img})`,
