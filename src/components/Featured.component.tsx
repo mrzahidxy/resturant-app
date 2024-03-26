@@ -1,15 +1,32 @@
-import { featuredProducts } from "@/data";
+import { TProduct } from "@/types/product";
 import Image from "next/image";
-import React from "react";
+
 
 type Props = {};
 
-const Featured = (props: Props) => {
+const getData = async () => {
+  const res = await fetch(
+    `http://localhost:3000/api/products`,
+    {
+      cache: "no-store",
+    }
+  );
+
+  if (!res?.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const data = res.json() || [];
+  return data;
+};
+
+const Featured = async (props: Props) => {
+
+  const featuredProducts = await getData()
   return (
     <div className="overflow-x-scroll custom-scroll">
       <div className="w-max flex">
-        {featuredProducts.map((product) => (
-          <div className="w-screen h-[60vh] m-2 flex flex-col xl:w-[33vw] justify-around items-center lg:w-[33vw] hover:bg-fuchsia-50 transition-all duration-300">
+        {featuredProducts.map((product:TProduct) => (
+          <div key={product?.id} className="w-screen h-[60vh] m-2 flex flex-col xl:w-[33vw] justify-around items-center lg:w-[33vw] hover:bg-fuchsia-50 transition-all duration-300">
             <div className="relative w-full flex-1">
               <Image
                 src={product?.img ?? ""}

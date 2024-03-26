@@ -7,13 +7,13 @@ type Props = {};
 
 const Navbar = (props: Props) => {
   return (
-    <div className="flex items-center justify-between lg:justify-around px-4 py-2 lg:py-4 bg-slate-50 uppercase font-medium">
+    <div className="flex items-center justify-between lg:justify-around px-4 py-2 lg:py-4 bg-slate-50 drop-shadow uppercase font-medium">
       <nav className="hidden lg:flex gap-8 text-red-500 font-bold">
         <Link href='/' className="cursor-pointer">Homepage</Link>
         <Link href='/menu' className="cursor-pointer">Menu</Link>
         <span className="cursor-pointer">Contact</span>
       </nav>
-      <div className="text-xl lg:text-5xl font-bold text-red-700 cursor-pointer">
+      <div className="text-xl lg:text-5xl font-bold text-red-500 cursor-pointer">
         Masimmo
       </div>
       <div className="md:hidden">
