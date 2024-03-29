@@ -2,6 +2,8 @@ import Image from "next/image";
 import Menu from "./Menu.component";
 import Cart from "./Cart.component";
 import Link from "next/link";
+import Userlinks from "./UserLinks.component";
+
 
 type Props = {};
 
@@ -23,7 +25,7 @@ const Navbar = (props: Props) => {
         <div className="bg-orange-500 text-white p-1 rounded-md flex cursor-pointer">
           <Image src="/phone.png" width={20} height={20} alt="" /> 0693258
         </div>
-        <span className="cursor-pointer">Orders</span>
+       <Userlinks/>
         <Cart />
       </div>
     </div>

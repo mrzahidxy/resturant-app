@@ -1,0 +1,23 @@
+"use client";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import React from "react";
+
+type Props = {};
+
+const Userlinks = (props: Props) => {
+  const { status } = useSession();
+
+  return status === "authenticated" ? (
+    <div className="space-x-4">
+      <span className="cursor-pointer" onClick={() => signOut()}>
+        Logout
+      </span>
+      <Link href='/orders' className="cursor-pointer">Orders</Link>
+    </div>
+  ) : (
+    <Link href="/auth/login">Login</Link>
+  );
+};
+
+export default Userlinks;
