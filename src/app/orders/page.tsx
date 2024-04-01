@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import React from 'react'
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const Orders = (props: Props) => {
   const { data: session, status } = useSession();
@@ -21,6 +22,31 @@ const Orders = (props: Props) => {
     queryFn: () =>
       fetch("http://localhost:3000/api/orders").then((res) => res.json()),
   });
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) => {
+      return fetch(`http://localhost:3000/api/orders/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(status),
+      });
+    },
+
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    },
+  });
+  const handleUpdate = (e: React.FormEvent<HTMLFormElement>, id: string) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const input = form[0] as HTMLInputElement;
+    const status = input?.value;
+    mutation.mutate({ id, status });
+  };
 
   if (isLoading || status === "loading") return "Loading...";
 
@@ -38,7 +64,10 @@ const Orders = (props: Props) => {
         </thead>
         <tbody>
           {data?.map((item: any) => (
-            <tr className={`${item.status !== "delivered" && "bg-red-50"}`} key={item.id}>
+            <tr
+              className={`${item.status !== "delivered" && "bg-red-50"}`}
+              key={item.id}
+            >
               <td className="hidden md:block py-6 px-1">{item.id}</td>
               <td className="py-6 px-1">
                 {item.createdAt.toString().slice(0, 10)}
@@ -47,7 +76,7 @@ const Orders = (props: Props) => {
               <td className="hidden md:block py-6 px-1">
                 {item.products[0].title}
               </td>
-              {/* {session?.user.isAdmin ? (
+              {session?.user.isAdmin ? (
                 <td>
                   <form
                     className="flex items-center justify-center gap-4"
@@ -64,13 +93,13 @@ const Orders = (props: Props) => {
                 </td>
               ) : (
                 <td className="py-6 px-1">{item.status}</td>
-              )} */}
+              )}
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Orders
+export default Orders;

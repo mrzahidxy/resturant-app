@@ -31,7 +31,7 @@ const Products = async ({ params }: Props) => {
           <div className="relative h-[80%]">
             {product?.img && (
               <Image
-                src="/temporary/p1.png"
+                src={product?.img}
                 alt={product?.title}
                 fill
                 className="object-contain"
