@@ -6,7 +6,7 @@ type Props = {};
 
 const getData = async () => {
   const res = await fetch(
-    `http://localhost:3000/api/products`,
+    `${process.env.NEXT_BASE_URL}/products`,
     {
       cache: "no-store",
     }
@@ -15,7 +15,11 @@ const getData = async () => {
   if (!res?.ok) {
     throw new Error("Failed to fetch data");
   }
+
+
   const data = res.json() || [];
+
+  console.log({data})
   return data;
 };
 
