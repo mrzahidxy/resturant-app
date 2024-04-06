@@ -17,7 +17,7 @@ const getData = async () => {
   }
   const data = res.json() || [];
 
-  // console.log({data})
+  console.log({data})
   return data;
 };
 
