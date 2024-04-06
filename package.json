@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "migrate:postgres": "dotenv -e .env.local -- npx prisma migrate deploy"
   },
   "dependencies": {
