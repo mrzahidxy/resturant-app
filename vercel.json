@@ -1,0 +1,15 @@
+{
+    "functions": {
+      "api/**/*.js": {
+        "runtime": "nodejs14.x"
+      }
+    },
+    "builds": [
+      {
+        "src": "prisma/schema.prisma",
+        "use": "@prisma/cli",
+        "config": { "prisma": "prisma" }
+      }
+    ]
+  }
+  

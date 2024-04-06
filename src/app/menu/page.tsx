@@ -8,9 +8,9 @@ const getData = async () => {
     cache: "no-store",
   });
 
-  if (!res?.ok) {
-    throw new Error("Failed to fetch data");
-  }
+  // if (!res?.ok) {
+  //   throw new Error("Failed to fetch data");
+  // }
   const data = res.json() || [];
   return data;
 };
@@ -23,7 +23,7 @@ const menuPage = async (props: Props) => {
   return (
     <div className="h-[calc(100vh-10rem)] lg:h-[calc(100vh-12rem)] flex items-center justify-center">
       <div className="lg:h-1/2 md:px-40 grid md:grid-cols-3">
-        {menu?.map((item: TMenuItem) => (
+        {[]?.map((item: TMenuItem) => (
           <div
             key={item?.slug}
             className="p-4"
