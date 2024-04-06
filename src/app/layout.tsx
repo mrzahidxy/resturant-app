@@ -6,6 +6,7 @@ import Notification from "@/components/Notification.component";
 import Footer from "@/components/Footer.component";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
             <footer>
               <Footer />
             </footer>
+            <ToastContainer />
           </QueryProvider>
         </AuthProvider>
       </body>

@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 type Props = {};
 
@@ -46,6 +48,7 @@ const Orders = (props: Props) => {
     const input = form[0] as HTMLInputElement;
     const status = input?.value;
     mutation.mutate({ id, status });
+    toast.success("Order status has been updated");
   };
 
   if (isLoading || status === "loading") return "Loading...";
@@ -63,7 +66,7 @@ const Orders = (props: Props) => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item: any) => (
+          {Array.isArray(data) && data?.map((item: any) => (
             <tr
               className={`${item.status !== "delivered" && "bg-red-50"}`}
               key={item.id}
