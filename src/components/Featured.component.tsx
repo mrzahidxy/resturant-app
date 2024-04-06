@@ -12,12 +12,12 @@ const getData = async () => {
     }
   );
 
-  // if (!res?.ok) {
-  //   throw new Error("Failed to fetch data");
-  // }
+  if (!res?.ok) {
+    throw new Error("Failed to fetch data");
+  }
   const data = res.json() || [];
 
-  console.log({data})
+  // console.log({data})
   return data;
 };
 
