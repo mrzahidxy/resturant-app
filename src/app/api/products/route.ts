@@ -14,3 +14,4 @@ export const GET = async (req: NextRequest) => {
     return new NextResponse(JSON.stringify(error), { status: 500 });
   }
 };
+
