@@ -55,7 +55,7 @@ const Slider = (props: Props) => {
           src={data[currentSlide]?.image}
           alt=""
           fill
-          className="object-cover"
+          className="object-cover z-0"
         />
       </div>
     </div>
