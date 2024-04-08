@@ -27,7 +27,7 @@ const Products = async ({ params }: Props) => {
   return (
     <div className="flex flex-wrap px-6 py-2 gap-1">
       {products?.map((product: TProduct) => (
-        <div key={product?.id} className="w-full md:w-1/2 lg:w-1/4 h-[50vh] flex flex-col justify-between shadow p-4 group">
+        <Link href={`/product/${product?.id}`} key={product?.id} className="w-full md:w-1/2 lg:w-1/4 h-[50vh] flex flex-col justify-between shadow p-4 group">
           <div className="relative h-[80%]">
             {product?.img && (
               <Image
@@ -51,7 +51,7 @@ const Products = async ({ params }: Props) => {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

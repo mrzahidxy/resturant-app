@@ -8,6 +8,7 @@ import Userlinks from "./UserLinks.component";
 type Props = {};
 
 const Navbar = (props: Props) => {
+  
   return (
     <div className="flex items-center justify-between lg:justify-around px-4 py-2 lg:py-4 bg-slate-50 drop-shadow uppercase font-medium">
       <nav className="hidden lg:flex gap-8 text-red-500 font-bold">
@@ -18,7 +19,7 @@ const Navbar = (props: Props) => {
       <div className="text-xl lg:text-5xl font-bold text-red-500 cursor-pointer">
         Masimmo
       </div>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Menu />
       </div>
       <div className="hidden space-x-8 text-red-500 lg:flex items-center">

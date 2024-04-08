@@ -22,7 +22,8 @@ const menuPage = async (props: Props) => {
     <div className="h-[calc(100vh-10rem)] lg:h-[calc(100vh-12rem)] flex items-center justify-center">
       <div className="lg:h-1/2 md:px-40 grid md:grid-cols-3">
         {menu?.map((item: TMenuItem) => (
-          <div
+          <Link
+            href={`/menu/${item?.slug}`}
             key={item?.slug}
             className="p-4"
             style={{
@@ -45,7 +46,7 @@ const menuPage = async (props: Props) => {
                 Explore
               </Link>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
