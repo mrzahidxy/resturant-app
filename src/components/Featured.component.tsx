@@ -28,7 +28,7 @@ const Featured = async (props: Props) => {
     <div className="overflow-x-scroll custom-scroll">
       <div className="w-max flex">
         {featuredProducts.map((product:TProduct) => (
-          <Link href={`/products/${product?.id}`} key={product?.id} className="w-screen h-[60vh] m-2 flex flex-col xl:w-[33vw] justify-around items-center lg:w-[33vw] hover:bg-fuchsia-50 transition-all duration-300">
+          <Link href={`/product/${product?.id}`} key={product?.id} className="w-screen h-[60vh] m-2 flex flex-col xl:w-[33vw] justify-around items-center lg:w-[33vw] hover:bg-fuchsia-50 transition-all duration-300">
             <div className="relative w-full flex-1">
               <Image
                 src={product?.img ?? ""}
