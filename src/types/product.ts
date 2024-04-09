@@ -9,4 +9,15 @@ export type TProduct = {
     options: { title: string; additionalPrice: number }[]; // Array of options objects
     catSlug: string;
   };
+
+
+  export type TProductBody = {
+    title: string;
+    desc: string;
+    img?: string; 
+    price: number; 
+    isFeatured?: boolean;
+    options: { title: string; additionalPrice: number }[];
+    catSlug: string;
+  };
   

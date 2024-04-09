@@ -15,3 +15,18 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
+export const POST = async (req: NextRequest) => {
+  try {
+    const body = await req.json();
+
+    await prisma.product.create({
+      data: { ...body },
+    });
+
+    return new NextResponse(JSON.stringify("Product is successfully created"), {
+      status: 200,
+    });
+  } catch (error) {
+    return new NextResponse(JSON.stringify(error), { status: 500 });
+  }
+};
