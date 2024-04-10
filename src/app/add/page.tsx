@@ -45,17 +45,22 @@ const AddPage = () => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
+    const { name, value } = e.target;
+    const parsedValue = name === "price" ? parseInt(value) : value;
+
     setInputs((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
+      return { ...prev, [e.target.name]: parsedValue };
     });
   };
-
 
   const handleChangeOptions = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const { name, value } = e.target;
+    const parsedValue = name === "additionalPrice" ? parseInt(value) : value;
+
     setOption((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
+      return { ...prev, [e.target.name]: parsedValue };
     });
   };
 
@@ -84,24 +89,22 @@ const AddPage = () => {
   };
 
   const mutation = useMutation({
-    mutationFn: (body: TProductBody) => {
-      return fetch(`http://localhost:3000/api/products`, {
+    mutationFn: async (body: TProductBody) => {
+      const response = await fetch(`http://localhost:3000/api/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       });
-    },
-    onSuccess() {
-      toast.success("Product is successfully added");
-      setInputs({ title: "", desc: "", price: 0, catSlug: "" }); 
-      setOption({ title: "", additionalPrice: 0 });
-      setOptions([]);
-      setFile(undefined);
-      if (formRef.current) {
-        formRef.current.reset();
+
+      if (response?.ok) {
+        toast.success("Product is successfully added");
+      } else {
+        toast.error("Something went wrong");
       }
+
+      return response.json();
     },
   });
 
@@ -129,11 +132,13 @@ const AddPage = () => {
     push("/");
   }
 
-
-
   return (
     <div className="py-4 lg:px-20 xl:px-40 flex items-center justify-center text-red-500">
-      <form ref={formRef} onSubmit={handleSubmit} className="w-1/2 flex flex-wrap gap-6">
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        className="w-1/2 flex flex-wrap gap-6"
+      >
         <h1 className="text-4xl mb-2 text-gray-300 font-bold">
           Add New Product
         </h1>
@@ -142,7 +147,12 @@ const AddPage = () => {
             className="text-sm cursor-pointer flex gap-4 items-center"
             htmlFor="file"
           >
-            <Image src={file ? URL.createObjectURL(file as File) :"/upload.jpg"} alt="" width={50} height={50} />
+            <Image
+              src={file ? URL.createObjectURL(file as File) : "/upload.jpg"}
+              alt=""
+              width={50}
+              height={50}
+            />
             <span className="cursor-pointer font-medium">Upload Image</span>
           </label>
           <input

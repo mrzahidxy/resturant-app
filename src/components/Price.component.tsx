@@ -6,17 +6,22 @@ import React, { useEffect, useState } from "react";
 
 const Price = ({ product }: { product: TProduct }) => {
   const { addToCart } = useCartStore();
-  const [total, setTotal] = useState(product.price);
+  const [total, setTotal] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
+  console.log(typeof(product?.price))
 
   useEffect(() => {
     if (product.options?.length) {
+      const basePrice = parseInt(product.price);
+      const additionalPrice = parseInt(product.options[selected]?.additionalPrice);
       setTotal(
-        quantity * product.price + product.options[selected].additionalPrice
+        quantity * basePrice + additionalPrice
       );
     }
   }, [quantity, selected, product]);
+
+
 
   const handleCart = () => {
     addToCart({
@@ -30,6 +35,8 @@ const Price = ({ product }: { product: TProduct }) => {
       }),
     });
   };
+
+  
 
   return (
     <div className="flex flex-col gap-4">

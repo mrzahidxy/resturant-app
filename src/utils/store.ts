@@ -32,22 +32,21 @@ export const useCartStore = create(
                 }
               : item
           );
-
           set((state) => ({
             products: updatedProducts,
-            totalItems: state.totalItems + 1,
+            totalItems: state.totalItems + item.quantity,
             totalPrice: state.totalPrice + item.price,
           }));
         } else {
           set((state) => ({
             products: [...state.products, item],
-            totalItems: state.totalItems + 1,
+            totalItems: state.totalItems + item.quantity,
             totalPrice: state.totalPrice + item.price,
           }));
         }
       },
-
       removeFromCart(item) {
+        console.log(item);
         set((state) => ({
           products: state.products.filter((product) => product.id != item.id),
           totalItems: state.totalItems - item.quantity,

@@ -4,9 +4,9 @@ export type TProduct = {
     title: string;
     desc: string;
     img?: string; // Optional field
-    price: number; // Assuming price is in numeric format
+    price: string; // Assuming price is in numeric format
     isFeatured: boolean;
-    options: { title: string; additionalPrice: number }[]; // Array of options objects
+    options: { title: string; additionalPrice: string }[]; // Array of options objects
     catSlug: string;
   };
 
