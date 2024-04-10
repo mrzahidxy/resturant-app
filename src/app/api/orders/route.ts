@@ -29,3 +29,19 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
+export const POST = async (req: NextRequest) => {
+  try {
+    const session = await getAuthSession();
+
+    if (!session) {
+      return new NextResponse(JSON.stringify("Unauthorized"), { status: 401 });
+    }
+
+    const body = await req.json();
+    const createdOrder = await prisma.order.create({data:body});
+
+    return new NextResponse(JSON.stringify(createdOrder), { status: 201 });
+  } catch (error) {
+    return new NextResponse(JSON.stringify(error), { status: 500 });
+  }
+};

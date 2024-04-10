@@ -1,10 +1,62 @@
 "use client";
+
 import { useCartStore } from "@/utils/store";
+import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CartPage = () => {
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
+  const { data: session } = useSession();
+  const { push } = useRouter();
+
+  const { mutate, data, error } = useMutation({
+    mutationFn: async (body: any) => {
+      const response = await fetch(`http://localhost:3000/api/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      return response.json();
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      toast.success("Order is created successfully");
+      push(`/pay/${data?.id}`);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
+      toast.success("Something went wrong");
+    }
+  }, [error]);
+
+  const handleCheckout = async () => {
+    if (!session) {
+      push("auth/login");
+    } else {
+      try {
+        mutate({
+          price: totalPrice,
+          products: products,
+          status: "not paid",
+          userEmail: session?.user?.email,
+        });
+      } catch (error) {}
+    }
+  };
+
+  console.log(data);
 
   return (
     <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-red-500 lg:flex-row">
@@ -56,7 +108,7 @@ const CartPage = () => {
         </div>
         <button
           className="bg-red-500 text-white p-3 rounded-md w-1/2 self-end"
-          //   onClick={handleCheckout}
+          onClick={handleCheckout}
         >
           CHECKOUT
         </button>
