@@ -16,28 +16,34 @@ export const POST = async (
   });
 
   if (order) {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: order?.price * 100,
-      currency: "usd",
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    });
+    // Check if payment intent already exists
+    if (!order.intent_id) {
+      const paymentIntent = await stripe.paymentIntents.create({
+        // TODO: amount should be dynamic.
+        //amount: order?.price * 100,
+        amount: 100,
+        currency: "usd",
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
 
+      console.log("paymentIntent", paymentIntent);
 
-    await prisma.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        intent_id: paymentIntent?.id,
-      },
-    });
+      await prisma.order.update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          intent_id: paymentIntent?.id,
+        },
+      });
 
-    return new NextResponse(
-      JSON.stringify({ clientSecret: paymentIntent?.client_secret }),
-      { status: 200 }
-    );
+      return new NextResponse(
+        JSON.stringify({ clientSecret: paymentIntent?.client_secret }),
+        { status: 200 }
+      );
+    }
   }
 
   return new NextResponse("Order not found", { status: 404 });
