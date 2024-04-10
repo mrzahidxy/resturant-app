@@ -4,7 +4,7 @@ import Link from "next/link";
 type Props = {};
 
 const getData = async () => {
-  const res = await fetch(`${process.env.NEXT_BASE_URL}/categories`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
     cache: "no-store",
   });
 

@@ -30,7 +30,7 @@ const Orders = (props: Props) => {
 
   const mutation = useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) => {
-      return fetch(`${process.env.NEXT_BASE_URL}/orders/${id}`, {
+      return fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
