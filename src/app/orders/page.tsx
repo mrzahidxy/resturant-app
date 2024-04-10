@@ -19,10 +19,11 @@ const Orders = (props: Props) => {
     router.push("/");
   }
 
+
   const { isLoading, error, data } = useQuery({
     queryKey: ["orders"],
     queryFn: () =>
-      fetch(`${process.env.NEXT_BASE_URL}/orders`).then((res) => res.json()),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`).then((res) => res.json()),
   });
 
   const queryClient = useQueryClient();

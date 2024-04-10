@@ -7,7 +7,7 @@ type Props = {};
 
 const getData = async () => {
   const res = await fetch(
-    `${process.env.NEXT_BASE_URL}/products`,
+    `${process.env.NEXT_PUBLIC_API_URL}/products`,
     {
       cache: "no-store",
     }
@@ -19,8 +19,6 @@ const getData = async () => {
 
 
   const data = res.json() || [];
-
-  console.log({data})
   return data;
 };
 

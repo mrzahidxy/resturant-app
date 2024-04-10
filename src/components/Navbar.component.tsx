@@ -16,9 +16,9 @@ const Navbar = (props: Props) => {
         <Link href='/menu' className="cursor-pointer">Menu</Link>
         <span className="cursor-pointer">Contact</span>
       </nav>
-      <div className="text-xl lg:text-5xl font-bold text-red-500 cursor-pointer">
+      <Link href='/' className="text-xl lg:text-5xl font-bold text-red-500 cursor-pointer">
         Masimmo
-      </div>
+      </Link>
       <div className="lg:hidden">
         <Menu />
       </div>
