@@ -90,7 +90,7 @@ const AddPage = () => {
 
   const mutation = useMutation({
     mutationFn: async (body: TProductBody) => {
-      const response = await fetch(`http://localhost:3000/api/products`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

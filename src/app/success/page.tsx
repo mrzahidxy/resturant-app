@@ -6,14 +6,18 @@ import ConfettiExplosion from "react-confetti-explosion";
 const SuccessPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const payment_intent = searchParams.get("payment_intent");
+  const intentId = searchParams.get("payment_intent");
 
   useEffect(() => {
     const makeRequest = async () => {
       try {
-        await fetch(`http://localhost:3000/api/confirm/${payment_intent}`, {
-          method: "PUT",
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/confirm/${intentId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         // setTimeout(() => {
         //   router.push("/orders");
         // }, 5000);
@@ -23,7 +27,7 @@ const SuccessPage = () => {
     };
 
     makeRequest();
-  }, [payment_intent, router]);
+  }, [intentId, router]);
 
   return (
     <>
