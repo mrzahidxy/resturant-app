@@ -16,13 +16,16 @@ const CartPage = () => {
 
   const { mutate, data, error } = useMutation({
     mutationFn: async (body: any) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       return response.json();
     },
@@ -46,17 +49,19 @@ const CartPage = () => {
       push("auth/login");
     } else {
       try {
-        mutate({
+        await mutate({
           price: totalPrice,
           products: products,
           status: "not paid",
           userEmail: session?.user?.email,
         });
-      } catch (error) {}
+
+        await products.map((item) => removeFromCart(item));
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
-
-  console.log(data);
 
   return (
     <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-9rem)] flex flex-col text-red-500 lg:flex-row">

@@ -9,14 +9,17 @@ const Price = ({ product }: { product: TProduct }) => {
   const [total, setTotal] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
-  console.log(typeof(product?.price))
+
+  console.log(product)
+  console.log(total)
+  console.log(quantity)
 
   useEffect(() => {
     if (product.options?.length) {
       const basePrice = parseInt(product.price);
       const additionalPrice = parseInt(product.options[selected]?.additionalPrice);
       setTotal(
-        quantity * basePrice + additionalPrice
+        quantity * (basePrice + additionalPrice)
       );
     }
   }, [quantity, selected, product]);
@@ -36,11 +39,11 @@ const Price = ({ product }: { product: TProduct }) => {
     });
   };
 
-  
+
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold">${total}</h2>
+      <h2 className="text-2xl font-bold">${product?.price}</h2>
       {/* OPTIONS CONTAINER */}
       <div className="flex gap-4">
         {product.options?.length &&

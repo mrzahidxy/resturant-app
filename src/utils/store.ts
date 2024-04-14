@@ -46,7 +46,6 @@ export const useCartStore = create(
         }
       },
       removeFromCart(item) {
-        console.log(item);
         set((state) => ({
           products: state.products.filter((product) => product.id != item.id),
           totalItems: state.totalItems - item.quantity,

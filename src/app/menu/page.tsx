@@ -35,8 +35,8 @@ const menuPage = async (props: Props) => {
             <div className={`w-1/2 text-${item.color} space-y-2`}>
               <h1 className="text-3xl font-medium">{item?.title}</h1>
               <p className="text-sm">{item?.desc}</p>
-              <Link
-                href={`/menu/${item?.slug}`}
+              <div
+            
                 className={`hidden w-24 text-center 2xl:block bg-${
                   item?.color === "black" ? "black" : "slate-50"
                 } text-${
@@ -44,7 +44,7 @@ const menuPage = async (props: Props) => {
                 } py-2 px-4 rounded-sm`}
               >
                 Explore
-              </Link>
+              </div>
             </div>
           </Link>
         ))}

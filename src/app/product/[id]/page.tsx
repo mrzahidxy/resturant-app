@@ -19,6 +19,8 @@ const getData = async (id: string) => {
 const SingleProductPage = async ({ params }: { params: { id: string } }) => {
   const singleProduct: TProduct = await getData(params.id);
 
+  console.log(singleProduct)
+
   return (
     <div className="h-screen flex flex-col justify-around text-red-500 md:flex-row md:items-center">
       {/* IMAGE CONTAINER */}

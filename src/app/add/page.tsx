@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -30,7 +30,7 @@ const AddPage = () => {
     title: "",
     desc: "",
     price: 0,
-    catSlug: "",
+    catSlug: "pizzas",
   });
 
   const [option, setOption] = useState<Option>({
@@ -90,13 +90,16 @@ const AddPage = () => {
 
   const mutation = useMutation({
     mutationFn: async (body: TProductBody) => {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/products`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }
+      );
 
       if (response?.ok) {
         toast.success("Product is successfully added");
@@ -108,8 +111,49 @@ const AddPage = () => {
     },
   });
 
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      // Reset form fields
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+      // Reset state variables
+      setOptions([]);
+      setFile(undefined);
+    }
+  }, [mutation.isSuccess]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Array to hold the names of missing fields
+    const missingFields: string[] = [];
+
+    // Check for missing fields
+    if (!inputs) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+    if (!inputs.title) {
+      missingFields.push("Title");
+    }
+    if (!inputs.desc) {
+      missingFields.push("Description");
+    }
+    if (!inputs.price) {
+      missingFields.push("Price");
+    }
+    if (!inputs?.catSlug) {
+      missingFields.push("Category");
+    }
+
+    // If there are missing fields, construct the error message dynamically
+    if (missingFields.length > 0) {
+      const errorMessage = `Please fill in the following required fields: ${missingFields.join(
+        ", "
+      )}.`;
+      toast.error(errorMessage);
+      return;
+    }
 
     try {
       const url = await upload();
@@ -163,7 +207,10 @@ const AddPage = () => {
           />
         </div>
         <div className="w-full flex flex-col gap-2 ">
-          <label className="text-sm font-medium">Title</label>
+          <div>
+            <label className="text-sm font-medium">Title</label>
+            <span>*</span>
+          </div>
           <input
             className="ring-1 ring-red-200 p-3 rounded-sm placeholder:text-red-200 outline-none"
             type="text"
@@ -173,7 +220,10 @@ const AddPage = () => {
           />
         </div>
         <div className="w-full flex flex-col gap-2">
-          <label className="text-sm font-medium">Description</label>
+          <div>
+            <label className="text-sm font-medium">Details</label>
+            <span>*</span>
+          </div>
           <textarea
             rows={3}
             className="ring-1 ring-red-200 p-3 rounded-sm placeholder:text-red-200 outline-none"
@@ -183,7 +233,10 @@ const AddPage = () => {
           />
         </div>
         <div className="w-full flex flex-col gap-2 ">
-          <label className="text-sm font-medium">Price</label>
+          <div>
+            <label className="text-sm font-medium">Price</label>
+            <span>*</span>
+          </div>
           <input
             className="ring-1 ring-red-200 p-3 rounded-sm placeholder:text-red-200 outline-none"
             type="number"
@@ -193,17 +246,34 @@ const AddPage = () => {
           />
         </div>
         <div className="w-full flex flex-col gap-2 ">
-          <label className="text-sm font-medium">Category</label>
+          <div>
+            <label className="text-sm font-medium">Category</label>
+            <span>*</span>
+          </div>
           <select
             className="ring-1 ring-red-200 p-3 rounded-sm placeholder:text-red-200 outline-none"
             name="catSlug"
             onChange={handleChange}
+            value={inputs?.catSlug}
           >
-            <option value="pizzas">Pizaa</option>
-            <option value="pastas">Pasta</option>
-            <option value="burgers">Burger</option>
+            <option value="pizzas">Cheesy Pizzas</option>
+            <option value="pastas">Italian Pastas</option>
+            <option value="burgers">Juicy Burgers</option>
           </select>
         </div>
+
+        {/* <div className="w-full flex gap-2 ">
+          <div>
+            <label className="text-sm font-medium">Featured</label>
+          </div>
+          <input
+            className=""
+            type="checkbox"
+            name="isFeatured"
+            onChange={handleChange}
+          />
+        </div> */}
+
         <div className="w-full flex flex-col gap-2">
           <label className="text-sm font-medium">Options</label>
           <div className="flex">
