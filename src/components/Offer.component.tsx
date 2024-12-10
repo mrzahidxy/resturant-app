@@ -17,7 +17,7 @@ const Offer = (props: Props) => {
           of empowerment. Quickly pontificate parallel.
         </p>
 
-        {/* <Countdown /> */}
+        <Countdown startDate="12/25/2024" />
         <button className="bg-red-500 px-4 py-2 rounded-md text-2xl">Order Now</button>
       </div>
 
