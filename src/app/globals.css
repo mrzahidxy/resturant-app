@@ -2,26 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-
-/* width */
-::-webkit-scrollbar {
-    width: 5px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
-}
- 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-    
+/* WebKit Browsers (Chrome, Safari, Edge) */
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
 }
 
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* For Firefox */
+.custom-scroll {
+  scrollbar-width: thin; /* Thin scrollbar */
+  scrollbar-color: #888 #f1f1f1; /* Thumb color and track color */
+}
