@@ -27,7 +27,7 @@ const Navbar = (props: Props) => {
           <Image src="/phone.png" width={20} height={20} alt="" /> 0693258
         </div>
        <Userlinks/>
-        <Cart />
+     
       </div>
     </div>
   );

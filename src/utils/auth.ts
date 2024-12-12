@@ -7,14 +7,14 @@ import { User } from "@prisma/client";
 declare module "next-auth" {
   interface Session {
     user: User & {
-      isAdmin: Boolean;
+      isAdmin: boolean;
     };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    isAdmin: Boolean;
+    isAdmin: boolean;
   }
 }
 
@@ -30,16 +30,21 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async session({ token, session }) {
-      if (token) {
-        session.user.isAdmin = !!token?.isAdmin;
+      if (token.isAdmin !== undefined) {
+        session.user.isAdmin = token.isAdmin;
       }
       return session;
     },
 
     async jwt({ token }) {
+      if (!token.email) return token;
+
       const userInDB = await prisma.user.findUnique({
         where: {
-          email: token?.email!,
+          email: token.email,
+        },
+        select: {
+          isAdmin: true,
         },
       });
 

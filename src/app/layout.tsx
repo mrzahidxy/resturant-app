@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar.component";
-import Notification from "@/components/Notification.component";
-import Footer from "@/components/Footer.component";
 import AuthProvider from "@/components/AuthProvider";
 import QueryProvider from "@/components/QueryProvider";
 import { ToastContainer } from "react-toastify";
@@ -15,24 +12,17 @@ export const metadata: Metadata = {
   description: "Order ur food",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+type Props = {
+ readonly children: React.ReactNode
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
           <QueryProvider>
-            <header>
-              <Notification />
-              <Navbar />
-            </header>
-            <main>{children}</main>
-            <footer>
-              <Footer />
-            </footer>
+            {children}
             <ToastContainer />
           </QueryProvider>
         </AuthProvider>
