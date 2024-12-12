@@ -1,23 +1,30 @@
 import Footer from "@/components/Footer.component";
 import Navbar from "@/components/Navbar.component";
 import Notification from "@/components/Notification.component";
-import React from "react";
+import React, { FC } from "react";
 
-type Props = { children: React.ReactNode };
+type Props = {
+  children: React.ReactNode;
+};
 
-const layout = ({ children }: Props) => {
+const Layout: FC<Props> = ({ children }) => {
   return (
-    <div className="min-h-screen">
-      <header>
+    <div className="flex flex-col min-h-screen">
+      {/* Header */}
+      <header className="bg-gray-50 shadow">
         <Notification />
         <Navbar />
       </header>
-      <main >{children}</main>
-      <footer>
+
+      {/* Main Content */}
+      <main className="flex-1 bg-gray-100">{children}</main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white">
         <Footer />
       </footer>
     </div>
   );
 };
 
-export default layout;
+export default Layout;
