@@ -19,3 +19,17 @@ export const GET = async (
     return new NextResponse(JSON.stringify(error), { status: 500 });
   }
 };
+
+export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
+  const { id } = params;
+
+  try {
+    await prisma.product.delete({
+      where: { id: id },
+    });
+
+    return new NextResponse("Product deleted", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Product not found", { status: 404 });
+  }
+};

@@ -23,7 +23,6 @@ type Option = {
   additionalPrice: number;
 };
 
-
 const AddPage = () => {
   const { data: session, status } = useSession();
   const { push } = useRouter();
@@ -76,8 +75,9 @@ const AddPage = () => {
   const handleAddOption = () => {
     setOptions((prev) => [...prev, option]);
     setOption({ title: "", additionalPrice: 0 });
-    if(optionsRefTitle.current) optionsRefTitle.current.value = "";
-    if (optionsRefAdditionalPrice.current) optionsRefAdditionalPrice.current.value = "";
+    if (optionsRefTitle.current) optionsRefTitle.current.value = "";
+    if (optionsRefAdditionalPrice.current)
+      optionsRefAdditionalPrice.current.value = "";
   };
 
   const handleChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,6 +165,7 @@ const AddPage = () => {
               alt=""
               width={50}
               height={50}
+              loading="lazy"
             />
             <span className="cursor-pointer font-medium">Upload Image</span>
           </label>

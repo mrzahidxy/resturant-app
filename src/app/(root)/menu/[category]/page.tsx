@@ -39,7 +39,7 @@ const Products = async ({ params }: Props) => {
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {products.map((product: TProduct) => (
+      {products?.data?.map((product: TProduct) => (
         <div key={product?.id} className="col-span-1">
           <Link
             href={`/product/${product?.id}`}
@@ -54,6 +54,7 @@ const Products = async ({ params }: Props) => {
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   className="object-contain rounded-md"
+                  loading="lazy"
                 />
               )}
             </div>

@@ -53,7 +53,7 @@ const Menu = (props: Props) => {
             )}
             <Cart />
             <li className="flex gap-3 bg-orange-300 p-2 rounded-md">
-              <Image src="/phone.png" width={20} height={20} alt="" /> 09258632
+              <Image src="/phone.png" width={20} height={20} alt="" loading="lazy"/> 09258632
             </li>
           </ul>
         </nav>

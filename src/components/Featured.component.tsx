@@ -38,7 +38,7 @@ const Featured = async (props: Props) => {
   return (
     <div className="overflow-x-auto custom-scroll py-4">
       <div className="flex gap-6">
-        {featuredProducts.map((product: TProduct) => (
+        {featuredProducts?.data?.map((product: TProduct) => (
           <Link
             href={`/product/${product?.id}`}
             key={product?.id}

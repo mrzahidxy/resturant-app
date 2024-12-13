@@ -5,20 +5,50 @@ import { NextRequest, NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const cat = searchParams.get("cat");
+  const isFeatured = searchParams.get("isFeatured");
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
+  const limit = parseInt(searchParams.get("limit") ?? "10", 10);
+
+  const offset = (page - 1) * limit;
+  const featuredFilter = isFeatured ? { isFeatured: true } : {};
+  const categoryFilter = cat ? { catSlug: cat } : {};
 
   try {
-    const prodducts = await prisma.product.findMany({
-      where: { ...(cat ? { catSlug: cat } : { isFeatured: true }) },
+    let products;
+    let totalProducts;
+
+    totalProducts = await prisma.product.count({
+      where: {
+        ...categoryFilter,
+        ...featuredFilter,
+      },
     });
-    return new NextResponse(JSON.stringify(prodducts), { status: 200 });
+    products = await prisma.product.findMany({
+      skip: offset,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        ...categoryFilter,
+        ...featuredFilter,
+      },
+    });
+    return new NextResponse(
+      JSON.stringify({
+        data: products,
+        totalProducts,
+        totalPages: Math.ceil(totalProducts / limit),
+        currentPage: page,
+      }),
+      { status: 200 }
+    );
   } catch (error) {
     return new NextResponse(JSON.stringify(error), { status: 500 });
   }
 };
 
 export const POST = async (req: NextRequest) => {
-
- 
   try {
     const formData = await req.formData();
     const file = formData.get("img") as File;
@@ -27,6 +57,7 @@ export const POST = async (req: NextRequest) => {
     const price = formData.get("price") as string;
     const catSlug = formData.get("catSlug") as string;
     const options = JSON.parse(formData.get("options") as string);
+    const isFeatured = formData.get("isFeatured") as string;
 
     // Validate category exists
     const category = await prisma.category.findUnique({
@@ -68,6 +99,7 @@ export const POST = async (req: NextRequest) => {
         },
         img,
         options,
+        isFeatured: isFeatured === "1" ? true : false,
       },
     });
 

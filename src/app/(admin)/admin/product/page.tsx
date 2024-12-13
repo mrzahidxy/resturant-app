@@ -2,11 +2,20 @@ import { TProduct } from "@/types/product";
 import Image from "next/image";
 import ProductDelete from "./product-delete.component";
 import Link from "next/link";
+import Pagination from "@/components/Paginate.component";
 
-type Props = {};
+type Props = {
+  searchParams: { page?: string };
+};
 
-const getData = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+const getData = async (page?: string) => {
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+  if (page) {
+    url.searchParams.set("page", page);
+  }
+
+  console.log(url);
+  const res = await fetch(url.toString(), {
     cache: "no-store",
   });
 
@@ -18,10 +27,10 @@ const getData = async () => {
   return data;
 };
 
-const Products = async (props: Props) => {
-  const products = await getData();
+const Products = async ({ searchParams }: Props) => {
+  const products = await getData(searchParams?.page);
 
-  if (!products || products.length === 0) {
+  if (!products || products?.data?.length === 0) {
     return (
       <div className="w-full h-[60vh] flex justify-center items-center">
         <h1 className="text-2xl font-bold">No products found</h1>
@@ -43,7 +52,7 @@ const Products = async (props: Props) => {
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full table-auto">
           <thead className="bg-gray-200">
-            <tr>
+            <tr className="text-left">
               <th className="px-4 py-2 text-left">Title</th>
               <th className="px-4 py-2 text-left hidden md:table-cell">
                 Description
@@ -59,7 +68,7 @@ const Products = async (props: Props) => {
             </tr>
           </thead>
           <tbody>
-            {products?.map((product: TProduct) => (
+            {products?.data?.map((product: TProduct) => (
               <tr className="border-b hover:bg-gray-50" key={product?.id}>
                 <td className="px-4 py-2">
                   <div className="flex items-center">
@@ -68,6 +77,7 @@ const Products = async (props: Props) => {
                       width={50}
                       height={50}
                       alt="Mediterranean Delight"
+                      loading="lazy"
                       className="w-10 h-10 rounded-full mr-2 object-cover"
                     />
                     <Link
@@ -106,6 +116,8 @@ const Products = async (props: Props) => {
           </tbody>
         </table>
       </div>
+
+      <Pagination totalPages={products?.totalPages} initialPage={1} />
     </div>
   );
 };
