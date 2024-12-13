@@ -61,6 +61,7 @@ const Slider = (props: Props) => {
           alt={slides[currentSlide]?.title || "Slide Image"}
           fill
           className="object-cover z-0"
+          loading="lazy"
         />
       </div>
     </div>

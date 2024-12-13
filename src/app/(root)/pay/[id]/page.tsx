@@ -43,7 +43,7 @@ const PayPage = ({ params }: { params: { id: string } }) => {
   };
 
   if (!clientSecret) {
-    return <div>Loading payment form...</div>;
+    return <div className="text-2xl text-center font-semibold text-red-600 mt-6">Loading payment form...</div>;
   }
 
   return (

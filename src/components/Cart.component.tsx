@@ -10,8 +10,8 @@ type Props = {};
 const Cart = (props: Props) => {
   const { totalItems } = useCartStore();
   return (
-    <Link href={'/cart'} className="flex gap-3 cursor-pointer">
-      <Image src="/cart.png" alt="cart" width={20} height={20} />
+    <Link href={'/cart'} className="flex gap-1 cursor-pointer">
+      <Image src="/cart.png" alt="cart" width={20} height={20} loading="lazy"/>
       Cart({totalItems})
     </Link>
   );
