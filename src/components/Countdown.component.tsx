@@ -33,7 +33,7 @@ const Countdown = ({ startDate }: { startDate: string }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [countdown]);
+  }, [countdown, targetDate]);
 
   return (
     <span className="font-bold text-5xl text-yellow-300">
