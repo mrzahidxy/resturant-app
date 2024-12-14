@@ -1,7 +1,7 @@
 import { ActionTypes } from "./../types/cart";
 import { CartType } from "@/types/cart";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, devtools  } from "zustand/middleware";
 
 const INTIAL_STATE = {
   products: [],
@@ -10,7 +10,8 @@ const INTIAL_STATE = {
 };
 
 export const useCartStore = create(
-  persist<CartType & ActionTypes>(
+  devtools(
+    persist<CartType & ActionTypes>(
     (set, get) => ({
       products: INTIAL_STATE.products,
       totalItems: INTIAL_STATE.totalItems,
@@ -26,9 +27,9 @@ export const useCartStore = create(
           const updatedProducts = products.map((product) =>
             product.id === productInState.id
               ? {
-                  ...item,
-                  quantity: item.quantity + product.quantity,
-                  price: item.price + product.price,
+                  ...product,
+                  quantity: product.quantity + item.quantity,
+                  price: product.price + item.price,
                 }
               : item
           );
@@ -54,5 +55,7 @@ export const useCartStore = create(
       },
     }),
     { name: "cart" }
-  )
+  ),
+  { name: "CartStore" } // Name to display in Redux DevTools
+)
 );

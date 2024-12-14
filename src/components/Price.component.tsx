@@ -11,7 +11,7 @@ const Price = ({ product }: { product: TProduct }) => {
   const [selected, setSelected] = useState(0);
 
   useEffect(() => {
-    if (Array.isArray(product.options) && product.options.length > 0) {
+    if (product.options.length > 0) {
       const basePrice = parseInt(product.price) || 0;
       const additionalPrice =
         parseInt(product.options[selected]?.additionalPrice) || 0;
@@ -28,8 +28,8 @@ const Price = ({ product }: { product: TProduct }) => {
     addToCart({
       id: product?.id,
       title: product?.title,
-      price: total,
       img: product?.img,
+      price: total,
       quantity: quantity,
       ...(product?.options?.length && {
         optionTitle: product.options[selected].title,
