@@ -2,6 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --lb-cream: #faf7f3;
+    --lb-rose: #f6ebe6;
+    --lb-ink: #231a16;
+    --lb-muted: #6b5b54;
+    --lb-red: #d32a33;
+    --lb-border: rgba(35, 26, 22, 0.08);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease both;
+}
+
+.animate-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.animate-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.animate-delay-3 {
+  animation-delay: 0.24s;
+}
+
 /* WebKit Browsers (Chrome, Safari, Edge) */
 .custom-scroll::-webkit-scrollbar {
   width: 8px;

@@ -4,7 +4,7 @@ type Props = {};
 
 const Footer = (props: Props) => {
   return (
-    <div className="drop-shadow flex justify-between p-4 font-bold md:text-xl text-red-500">
+    <div className="mx-auto flex w-full max-w-6xl justify-between px-6 py-4 font-bold text-red-500 md:text-xl">
       <span>MASSIMO</span>
       <span>© ALL RIGHT RESERVED</span>
     </div>
