@@ -1,4 +1,5 @@
 import { getAuthSession } from "@/utils/auth";
+import AdminNavbar from "./navbar.component";
 import Sidebar from "./sidebar.component";
 import { redirect } from "next/navigation";
 
@@ -10,9 +11,12 @@ const layout = async ({ children }: Props) => {
   if(!session?.user?.isAdmin) return redirect("/")
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen bg-[#f6f6f6]">
       <Sidebar />
-      <main className="flex-1 p-8">{children}</main>
+      <div className="flex min-h-screen flex-1 flex-col">
+        <AdminNavbar />
+        <main className="flex-1">{children}</main>
+      </div>
     </div>
   );
 };

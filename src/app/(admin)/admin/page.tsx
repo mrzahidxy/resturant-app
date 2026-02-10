@@ -4,7 +4,7 @@ type Props = {};
 
 const page = (props: Props) => {
   return (
-    <div className="w-2/3 text-3xl bg-red-500 text-white p-16 rounded-md">
+    <div className="w-2/3 text-3xl bg-red-500 text-white p-16 rounded-md m-4">
       Welcome to Admin Dashboard
     </div>
   );

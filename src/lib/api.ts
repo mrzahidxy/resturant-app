@@ -16,6 +16,7 @@ type ApiErrorDetails = {
 };
 
 const DEFAULT_REVALIDATE = 3600;
+const DEFAULT_NO_CACHE = 0;
 
 const getBaseUrl = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -31,6 +32,17 @@ const safeReadText = async (res: Response) => {
   } catch {
     return "";
   }
+};
+
+const buildQuery = (params: Record<string, string | number | undefined>) => {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && String(value).length > 0) {
+      query.set(key, String(value));
+    }
+  });
+  const queryString = query.toString();
+  return queryString ? `?${queryString}` : "";
 };
 
 export class ApiError extends Error {
@@ -86,13 +98,36 @@ export const createApiClient = (fetcher: Fetcher = fetch) => ({
       fetcher,
       revalidate,
     }),
-  getProducts: (params?: { limit?: number }, revalidate?: number) => {
-    const query = params?.limit ? `?limit=${params.limit}` : "";
-    return fetchJson<TProduct[] | { data: TProduct[] }>(`/products${query}`, {
-      fetcher,
-      revalidate,
-    });
-  },
+  getProducts: (params?: { limit?: number }, revalidate?: number) =>
+    fetchJson<TProduct[] | { data: TProduct[] }>(
+      `/products${buildQuery({ limit: params?.limit })}`,
+      {
+        fetcher,
+        revalidate,
+      },
+    ),
+  getAdminProducts: (params?: { page?: string }, revalidate = DEFAULT_NO_CACHE) =>
+    fetchJson<{ data?: TProduct[]; totalPages?: number }>(
+      `/products${buildQuery({ page: params?.page })}`,
+      { fetcher, revalidate },
+    ),
+  getAdminOrders: (
+    params: { page?: string; session: unknown },
+    revalidate = DEFAULT_NO_CACHE,
+  ) =>
+    fetchJson<{ data?: any[]; totalPages?: number; currentPage?: number }>(
+      `/orders${buildQuery({ page: params.page })}`,
+      {
+        fetcher,
+        revalidate,
+        init: {
+          headers: {
+            "Content-Type": "application/json",
+            session: JSON.stringify(params.session ?? {}),
+          },
+        },
+      },
+    ),
 });
 
 export const getMenuCategories = (revalidate?: number) =>
@@ -106,3 +141,13 @@ export const getProductById = (id: string, revalidate?: number) =>
 
 export const getProducts = (params?: { limit?: number }, revalidate?: number) =>
   createApiClient().getProducts(params, revalidate);
+
+export const getAdminProducts = (
+  params?: { page?: string },
+  revalidate?: number,
+) => createApiClient().getAdminProducts(params, revalidate);
+
+export const getAdminOrders = (
+  params: { page?: string; session: unknown },
+  revalidate?: number,
+) => createApiClient().getAdminOrders(params, revalidate);
