@@ -29,10 +29,15 @@ const PayClient = ({ id }: Props) => {
         );
 
         const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data?.message || "Failed to create payment intent");
+        }
         setClientSecret(data?.clientSecret);
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(
+          error instanceof Error ? error.message : "Something went wrong"
+        );
       }
     };
     makeRequest();

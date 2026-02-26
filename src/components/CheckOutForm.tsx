@@ -6,6 +6,20 @@ import {
   LinkAuthenticationElement,
 } from "@stripe/react-stripe-js";
 
+const getStripeErrorMessage = (error: any) => {
+  if (!error) return "An unexpected error occurred.";
+
+  if (error.code === "card_declined" && error.decline_code === "test_mode_live_card") {
+    return "Test mode is enabled. Use a Stripe test card (e.g. 4242 4242 4242 4242), not a real card.";
+  }
+
+  if (error.type === "card_error" || error.type === "validation_error") {
+    return error.message || "Payment failed. Please check your card details.";
+  }
+
+  return error.message || "An unexpected error occurred.";
+};
+
 export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
@@ -68,11 +82,7 @@ export default function CheckoutForm() {
     // your `return_url`. For some payment methods like iDEAL, your customer will
     // be redirected to an intermediate site first to authorize the payment, then
     // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message || "Something went wrong.");
-    } else {
-      setMessage("An unexpected error occurred.");
-    }
+    setMessage(getStripeErrorMessage(error));
 
     setIsLoading(false);
   };
