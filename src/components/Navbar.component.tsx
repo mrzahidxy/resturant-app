@@ -7,25 +7,34 @@ import Userlinks from "./UserLinks.component";
 type Props = {};
 
 const Navbar = (props: Props) => {
-  
   return (
-    <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-2 uppercase font-medium lg:py-4">
-      <nav className="hidden lg:flex gap-8 text-red-500 font-bold">
-        <Link href='/' className="cursor-pointer">Homepage</Link>
-        <Link href='/menu' className="cursor-pointer">Menu</Link>
-        <Link href='/contact' className="cursor-pointer">Contact</Link>
+    <div className="ui-shell flex w-full items-center justify-between py-3 font-medium lg:py-4">
+      <nav className="hidden gap-2 lg:flex">
+        <Link href="/" className="ui-nav-link">
+          Homepage
+        </Link>
+        <Link href="/menu" className="ui-nav-link">
+          Menu
+        </Link>
+        <Link href="/contact" className="ui-nav-link">
+          Contact
+        </Link>
       </nav>
-      <Link href='/' className="text-xl lg:text-5xl font-bold text-red-500 cursor-pointer">
+      <Link
+        href="/"
+        className="rounded-full px-2 py-1 text-xl font-bold tracking-tight text-[var(--lb-red)] transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200 lg:text-5xl"
+      >
         Masimmo
       </Link>
       <div className="lg:hidden">
         <Menu />
       </div>
-      <div className="hidden space-x-8 text-red-500 lg:flex items-center">
-        <div className="bg-orange-500 text-white p-1 rounded-md flex cursor-pointer">
-          <Image src="/phone.png" width={20} height={20} alt="" loading="lazy"/> 0693258
+      <div className="hidden items-center gap-5 text-[var(--lb-red)] lg:flex">
+        <div className="ui-phone-pill">
+          <Image src="/phone.png" width={20} height={20} alt="" loading="lazy" />
+          <span>0693258</span>
         </div>
-       <Userlinks/>
+        <Userlinks />
       </div>
     </div>
   );

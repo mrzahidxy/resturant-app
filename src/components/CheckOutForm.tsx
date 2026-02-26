@@ -81,7 +81,7 @@ export default function CheckoutForm() {
     <div className="flex justify-center p-4">
       <form
         id="payment-form"
-        className="space-y-4 w-full lg:w-1/2 shadow-md rounded-md p-12"
+        className="ui-card w-full space-y-4 p-8 lg:w-1/2 lg:p-12"
         onSubmit={handleSubmit}
       >
         <LinkAuthenticationElement id="link-authentication-element" />
@@ -93,7 +93,7 @@ export default function CheckoutForm() {
         />
 
         <button
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-md text-sm"
+          className="ui-btn ui-btn-primary w-full justify-center rounded-xl py-3"
           disabled={isLoading || !stripe || !elements}
           id="submit"
         >
@@ -103,7 +103,7 @@ export default function CheckoutForm() {
         </button>
 
         {/* Show any error or success messages */}
-        {message && <div id="payment-message">{message}</div>}
+        {message && <div id="payment-message" className="ui-muted text-sm">{message}</div>}
       </form>
     </div>
   );

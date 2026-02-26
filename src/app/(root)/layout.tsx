@@ -9,18 +9,18 @@ type Props = {
 
 const Layout: FC<Props> = ({ children }) => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="bg-gray-50 shadow">
+      <header className="ui-header-surface border-b shadow-sm">
         <Notification />
         <Navbar />
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-100">{children}</main>
+      <main className="ui-main-surface flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white">
+      <footer className="ui-footer-surface border-t border-white/10">
         <Footer />
       </footer>
     </div>

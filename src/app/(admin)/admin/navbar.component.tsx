@@ -21,7 +21,7 @@ const AdminNavbar = () => {
         <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
       </div>
       <button
-        className="rounded-full border border-slate-200 px-5 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600 transition hover:border-[#C72C41] hover:text-[#C72C41]"
+        className="ui-btn ui-btn-secondary"
         onClick={() => signOut()}
       >
         Logout

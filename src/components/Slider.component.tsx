@@ -48,7 +48,7 @@ const Slider = (props: Props) => {
           {slides[currentSlide]?.title}
         </h1>
         <div>
-          <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition">
+          <button className="ui-btn ui-btn-primary ui-btn-lg">
             Order Now
           </button>
         </div>

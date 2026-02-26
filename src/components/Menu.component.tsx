@@ -13,8 +13,14 @@ const Menu = (props: Props) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="cursor-pointer">
-      <div onClick={() => setMenuOpen(!isMenuOpen)}>
+    <div>
+      <button
+        type="button"
+        className="ui-btn ui-btn-ghost ui-btn-sm p-1"
+        onClick={() => setMenuOpen(!isMenuOpen)}
+        aria-expanded={isMenuOpen}
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+      >
         <Image
           src={`${isMenuOpen ? "/close.png" : "/open.png"}`}
           alt=""
@@ -22,38 +28,71 @@ const Menu = (props: Props) => {
           height={30}
           className="cursor-pointer"
         />
-      </div>
+      </button>
       {isMenuOpen && (
-        <nav className="absolute bg-red-500 w-full left-0 top-23 h-[calc(100vh-4rem)] z-50">
-          <ul className="h-full flex flex-col gap-6 justify-center items-center text-lg font-semibold text-white">
-            <Link href="/" onClick={() => setMenuOpen(!isMenuOpen)}>
-              HomePage
-            </Link>
-            <Link href="/menu" onClick={() => setMenuOpen(!isMenuOpen)}>
-              Menu
-            </Link>
-            <li>Contact</li>
+        <nav className="absolute left-0 top-20 z-50 h-[calc(100vh-5rem)] w-full bg-[var(--lb-red)] px-6 py-8 shadow-2xl">
+          <ul className="flex h-full flex-col items-center justify-center gap-5 text-lg font-semibold text-white">
+            <li>
+              <Link
+                href="/"
+                className="ui-btn ui-btn-secondary ui-btn-lg min-w-52"
+                onClick={() => setMenuOpen(!isMenuOpen)}
+              >
+                Homepage
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/menu"
+                className="ui-btn ui-btn-secondary ui-btn-lg min-w-52"
+                onClick={() => setMenuOpen(!isMenuOpen)}
+              >
+                Menu
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/contact"
+                className="ui-btn ui-btn-secondary ui-btn-lg min-w-52"
+                onClick={() => setMenuOpen(!isMenuOpen)}
+              >
+                Contact
+              </Link>
+            </li>
             {status === "authenticated" ? (
-              <div className="flex flex-col gap-4">
-                <span className="cursor-pointer" onClick={() => signOut()}>
-                  Logout
-                </span>
+              <>
+                <li>
+                  <button className="ui-btn ui-btn-secondary ui-btn-lg min-w-52" onClick={() => signOut()}>
+                    Logout
+                  </button>
+                </li>
+                <li>
+                  <Link
+                    href="/orders"
+                    className="ui-btn ui-btn-secondary ui-btn-lg min-w-52"
+                    onClick={() => setMenuOpen(!isMenuOpen)}
+                  >
+                    Orders
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li>
                 <Link
-                  href="/orders"
-                  className="cursor-pointer"
+                  href="/auth/login"
+                  className="ui-btn ui-btn-secondary ui-btn-lg min-w-52"
                   onClick={() => setMenuOpen(!isMenuOpen)}
                 >
-                  Orders
+                  Login
                 </Link>
-              </div>
-            ) : (
-              <Link href="/auth/login" onClick={() => setMenuOpen(!isMenuOpen)}>
-                Login
-              </Link>
+              </li>
             )}
-            <Cart />
-            <li className="flex gap-3 bg-orange-300 p-2 rounded-md">
-              <Image src="/phone.png" width={20} height={20} alt="" loading="lazy"/> 09258632
+            <li>
+              <Cart variant="light" />
+            </li>
+            <li className="ui-phone-pill">
+              <Image src="/phone.png" width={20} height={20} alt="" loading="lazy" />
+              <span>09258632</span>
             </li>
           </ul>
         </nav>
