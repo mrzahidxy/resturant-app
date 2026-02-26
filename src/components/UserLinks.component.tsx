@@ -10,26 +10,28 @@ const Userlinks = (props: Props) => {
   const { status, data } = useSession();
 
   return status === "authenticated" ? (
-    <div className="">
+    <div>
       {data?.user?.isAdmin ? (
-        <Link href="/admin" className="cursor-pointer">
+        <Link href="/admin" className="ui-nav-link">
           Admin
         </Link>
       ) : (
-        <div className="flex gap-4">
+        <div className="flex items-center gap-2">
           <Cart />
-          <Link href="/orders" className="cursor-pointer">
+          <Link href="/orders" className="ui-nav-link">
             Orders
           </Link>
 
-          <button className="cursor-pointer uppercase" onClick={() => signOut()}>
+          <button className="ui-btn ui-btn-ghost" onClick={() => signOut()}>
             Logout
           </button>
         </div>
       )}
     </div>
   ) : (
-    <Link href="/auth/login">Login</Link>
+    <Link href="/auth/login" className="ui-btn ui-btn-secondary ui-btn-sm">
+      Login
+    </Link>
   );
 };
 

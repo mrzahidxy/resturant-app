@@ -9,6 +9,7 @@ const Price = ({ product }: { product: TProduct }) => {
   const [total, setTotal] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selected, setSelected] = useState(0);
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     if (Array.isArray(product.options) && product.options.length > 0) {
@@ -35,20 +36,38 @@ const Price = ({ product }: { product: TProduct }) => {
         optionTitle: product.options[selected].title,
       }),
     });
+
+    setAdded(true);
   };
+
+  useEffect(() => {
+    if (!added) return;
+
+    const timeout = setTimeout(() => setAdded(false), 1200);
+    return () => clearTimeout(timeout);
+  }, [added]);
 
 
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold">${product?.price}</h2>
+    <div className="flex flex-col gap-5">
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="ui-muted text-xs font-semibold uppercase tracking-[0.2em]">
+            Starting at
+          </p>
+          <h2 className="text-2xl font-bold text-[var(--lb-ink)]">${product?.price}</h2>
+        </div>
+      </div>
       {/* OPTIONS */}
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-3">
         {!!product.options?.length &&
           product.options?.map((option, index) => (
             <button
               key={option.title}
-              className={`${selected === index && "bg-red-500 text-white"} min-w-[6rem] p-2 ring-1 ring-red-400 rounded-md`}
+              className={`ui-btn min-w-[6rem] rounded-xl px-3 py-2 normal-case tracking-normal ring-1 ring-red-200 ${
+                selected === index ? "ui-btn-primary ring-red-500" : "ui-btn-secondary"
+              }`}
               onClick={() => setSelected(index)}
             >
               {option.title}
@@ -56,18 +75,20 @@ const Price = ({ product }: { product: TProduct }) => {
           ))}
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         {/* QUANTITY */}
-        <div className="flex justify-between w-full font-bold p-2 px-6 ring-1 ring-red-500">
+        <div className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-white p-2 px-4 font-bold shadow-sm lg:flex-1">
           <span>Quantity</span>
           <div className="text-xl flex gap-4 items-center">
             <button
+              className="ui-btn ui-btn-ghost ui-btn-sm h-8 w-8 rounded-full p-0 text-lg"
               onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))}
             >
               {"<"}
             </button>
             <span>{quantity}</span>
             <button
+              className="ui-btn ui-btn-ghost ui-btn-sm h-8 w-8 rounded-full p-0 text-lg"
               onClick={() => setQuantity((prev) => (prev < 9 ? prev + 1 : 9))}
             >
               {">"}
@@ -76,10 +97,13 @@ const Price = ({ product }: { product: TProduct }) => {
         </div>
         {/* CART BUTTON */}
         <button
-          className="uppercase font-bold w-56 bg-red-500 text-white p-3 ring-1 ring-red-500"
+          className={`ui-btn w-full rounded-xl py-3 lg:w-56 ${
+            added ? "ui-btn-secondary" : "ui-btn-primary"
+          }`}
           onClick={handleCart}
+          aria-live="polite"
         >
-          Add to Cart
+          {added ? "Added" : "Add to Cart"}
         </button>
       </div>
     </div>

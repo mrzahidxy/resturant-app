@@ -23,8 +23,8 @@ const Pagination = ({ totalPages, initialPage }: PaginationProps) => {
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <button
           key={page}
-          className={`px-4 py-2 mx-1 border ${
-            page === currentPage ? "bg-red-500 text-white" : "bg-gray-200"
+          className={`ui-btn ui-btn-sm mx-1 min-w-10 ${
+            page === currentPage ? "ui-btn-primary" : "ui-btn-secondary"
           }`}
           onClick={() => handlePageChange(page)}
         >

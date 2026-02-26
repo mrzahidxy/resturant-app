@@ -18,7 +18,7 @@ const Offer = (props: Props) => {
 
         <Countdown startDate="12/25/2024" />
 
-        <button className="bg-red-500 px-6 py-3 rounded-md text-lg md:text-xl font-medium hover:bg-red-600 transition">
+        <button className="ui-btn ui-btn-primary ui-btn-lg text-lg md:text-xl font-medium normal-case tracking-normal">
           Order Now
         </button>
       </div>

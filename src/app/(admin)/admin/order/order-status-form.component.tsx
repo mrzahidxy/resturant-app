@@ -45,9 +45,9 @@ const OrderStatusForm = ({ item }: Props) => {
       >
         <input
           placeholder={item.status}
-          className="p-2 ring-1 ring-red-100 rounded-md"
+          className="ui-input max-w-48"
         />
-        <button className="bg-red-400 text-white p-2 rounded-md">
+        <button className="ui-btn ui-btn-primary rounded-xl px-4 py-2">
           Update
         </button>
       </form>

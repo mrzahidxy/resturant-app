@@ -1,49 +1,123 @@
 import Price from "@/components/Price.component";
+import { getProductById, getProducts } from "@/lib/api";
 import { TProduct } from "@/types/product";
 import Image from "next/image";
+import { Montserrat } from "next/font/google";
 
-const fetchProduct = async (id: string): Promise<TProduct> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
-    cache: "no-store",
-  });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch product data!");
+export async function generateStaticParams() {
+  try {
+    const payload = await getProducts({ limit: 1000 }, 86400);
+    const products = Array.isArray(payload)
+      ? payload
+      : "data" in payload && Array.isArray(payload.data)
+        ? payload.data
+        : [];
+
+    return (products || [])
+      .map((product: TProduct) => ({ id: String(product.id) }))
+      .filter((item) => item.id.length > 0);
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
   }
-
-  return response.json();
-};
+}
 
 const SingleProductPage = async ({ params }: { params: { id: string } }) => {
   try {
-    const singleProduct = await fetchProduct(params.id);
+    const singleProduct = await getProductById(params.id, 86400);
 
     return (
-      <div className="h-[calc(100vh-6rem)] lg:h-[calc(100vh-12rem)] px-4 md:px-12 lg:px-24 flex flex-col md:flex-row gap-10 justify-center items-center text-red-600">
-        {/* IMAGE CONTAINER */}
-        {singleProduct.img && (
-          <div className="relative flex-1 w-80 h-80 md:w-96 md:h-96">
-            <Image
-              src={singleProduct.img}
-              alt={singleProduct.title || "Product Image"}
-              className="object-contain"
-              fill
-              loading="lazy"
-            />
+      <div className="pb-16 pt-8 text-[var(--lb-ink)] md:pb-20 md:pt-10">
+        <section className="ui-shell">
+          <div className="mb-6 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] md:mb-8">
+            <span className="rounded-full bg-white px-3 py-1 text-[var(--lb-muted)] shadow-sm ring-1 ring-[var(--lb-border)]">
+              Menu
+            </span>
+            <span className="text-[var(--lb-muted)]/70">/</span>
+            <span className="rounded-full bg-[var(--lb-rose)] px-3 py-1 text-[var(--lb-red)] shadow-sm ring-1 ring-red-100">
+              {singleProduct.catSlug || "Product"}
+            </span>
           </div>
-        )}
-        {/* TEXT CONTAINER */}
-        <div className="flex-1 space-y-4">
-          <h1 className="text-3xl font-bold uppercase">{singleProduct.title || "Unnamed Product"}</h1>
-          <p className="text-gray-600">{singleProduct.desc || "No description available."}</p>
-          <Price product={singleProduct} />
-        </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1.08fr_1fr] lg:gap-8">
+            <div className="ui-card overflow-hidden rounded-3xl p-4 sm:p-6">
+              <div className="relative overflow-hidden rounded-2xl border border-[var(--lb-border)] bg-[#eef1f4] p-4 sm:p-6">
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/70 to-transparent" />
+                {singleProduct.img ? (
+                  <Image
+                    src={singleProduct.img}
+                    alt={singleProduct.title || "Product Image"}
+                    className="h-full w-full object-contain"
+                    width={900}
+                    height={900}
+                    priority
+                  />
+                ) : (
+                  <div className="h-[320px] bg-[#eef1f4] sm:h-[420px]" />
+                )}
+              </div>
+            </div>
+
+            <div className="ui-card rounded-3xl p-6 sm:p-8">
+              <div className="flex h-full flex-col">
+                <div className="flex flex-wrap items-center gap-2">
+                  {singleProduct.isFeatured && (
+                    <span className="rounded-full bg-[var(--lb-red)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--lb-red)]">
+                      Featured
+                    </span>
+                  )}
+                  {singleProduct.catSlug && (
+                    <span className="rounded-full bg-[var(--lb-rose)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--lb-muted)]">
+                      {singleProduct.catSlug}
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-5">
+                  <h1 className={`${montserrat.className} ui-heading text-2xl sm:text-3xl lg:text-4xl`}>
+                    {singleProduct.title || "Unnamed Product"}
+                  </h1>
+                  <p className="ui-muted mt-3 max-w-prose text-sm leading-7 sm:text-base">
+                    {singleProduct.desc || "No description available."}
+                  </p>
+                </div>
+
+                {singleProduct.catSlug && (
+                  <div className="mt-8 grid grid-cols-1 gap-3 sm:max-w-xs">
+                    <div className="rounded-2xl border border-[var(--lb-border)] bg-white p-3">
+                    <p className="ui-muted text-[11px] font-semibold uppercase tracking-[0.2em]">
+                      Category
+                    </p>
+                    <p className="mt-2 truncate text-sm font-semibold uppercase text-[var(--lb-red)]">
+                      {singleProduct.catSlug}
+                    </p>
+                  </div>
+                  </div>
+                )}
+
+                <div className="mt-8 rounded-2xl border border-[var(--lb-border)] bg-[linear-gradient(to_bottom,#fff,#fdf9f6)] p-4 sm:p-5">
+                  <p className="ui-muted text-xs font-semibold uppercase tracking-[0.28em]">
+                  Select size
+                  </p>
+                  <div className="mt-4">
+                    <Price product={singleProduct} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     );
   } catch (error) {
     return (
-      <div className="h-full flex justify-center items-center text-red-500">
-        <h1 className="text-2xl font-bold">Product not found!</h1>
+      <div className="ui-shell flex min-h-[40vh] items-center justify-center py-12">
+        <div className="ui-card rounded-3xl px-8 py-10 text-center">
+          <h1 className="text-2xl font-bold text-[var(--lb-red)]">Product not found!</h1>
+          <p className="ui-muted mt-2 text-sm">Please try another item from the menu.</p>
+        </div>
       </div>
     );
   }

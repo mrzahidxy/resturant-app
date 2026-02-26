@@ -66,7 +66,7 @@ const Featured = async (props: Props) => {
               <span className="text-lg font-bold text-red-500">
                 ৳{product?.price ?? "N/A"}
               </span>
-              <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition">
+              <button className="ui-btn ui-btn-primary ui-btn-sm">
                 Add to Cart
               </button>
             </div>
