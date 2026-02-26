@@ -33,10 +33,10 @@ const Products = async ({ params }: Props) => {
   } catch (error) {
     console.error("Error fetching products:", error);
   }
-  const productList = Array.isArray(products?.data)
-    ? products.data
-    : Array.isArray(products)
-      ? products
+  const productList = Array.isArray(products)
+    ? products
+    : "data" in products && Array.isArray(products.data)
+      ? products.data
       : [];
   const categoryLabel = params?.category?.replace(/-/g, " ") ?? "Menu";
   const topPicks = productList.slice(0, 6);

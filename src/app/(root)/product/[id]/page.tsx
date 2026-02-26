@@ -9,7 +9,11 @@ const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600"
 export async function generateStaticParams() {
   try {
     const payload = await getProducts({ limit: 1000 }, 86400);
-    const products = Array.isArray(payload?.data) ? payload.data : payload;
+    const products = Array.isArray(payload)
+      ? payload
+      : "data" in payload && Array.isArray(payload.data)
+        ? payload.data
+        : [];
 
     return (products || [])
       .map((product: TProduct) => ({ id: String(product.id) }))

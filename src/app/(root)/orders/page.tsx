@@ -21,7 +21,7 @@ const getData = async (page: number) => {
         "Content-Type": "application/json",
         session: JSON.stringify(session),
       },
-      cache: "no-store",
+      next: { revalidate: 0 },
     });
 
     if (!res.ok) {

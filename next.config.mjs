@@ -3,7 +3,15 @@ const nextConfig = {
   experimental: {
     turbo: {
       rules: {
-        "*.svg": ["@vercel/og/svg", { runtime: "nodejs" }],
+        "*.svg": {
+          loaders: [
+            {
+              loader: "@vercel/og/svg",
+              options: { runtime: "nodejs" },
+            },
+          ],
+          as: "*.js",
+        },
       },
     },
   },
