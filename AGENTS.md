@@ -33,6 +33,9 @@ You are a coding agent working in this repository. Use this file as the project-
 ## Coding style and maintenance expectations
 - Match the existing code style in the touched file (quote style, semicolons, import order, naming).
 - Prefer consistency with local patterns over introducing a new pattern.
+- This project is currently MVP-focused: prefer the simplest implementation that solves the problem reliably.
+- Avoid over-engineering (extra abstractions, premature optimization, generic frameworks, complex patterns) unless there is a clear current need.
+- Favor direct, readable code over highly configurable or extensible designs when shipping MVP features/fixes.
 - Keep components focused; avoid large mixed UI/data/business-logic changes in one file unless necessary.
 - Reuse existing utilities (`src/lib/api.ts`, `src/utils/*`, providers, shared components) before adding new abstractions.
 - Keep TypeScript types explicit at boundaries (API payloads, component props, utility return values).
