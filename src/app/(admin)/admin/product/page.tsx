@@ -4,22 +4,40 @@ import ProductDelete from "./product-delete.component";
 import Link from "next/link";
 import Pagination from "@/components/Paginate.component";
 import { getAdminProducts } from "@/lib/api";
+import { logger, serializeError } from "@/utils/logger";
 
 type Props = {
   searchParams: { page?: string };
 };
 
 const getData = async (page?: string) => {
+  const pageLogger = logger.child({ scope: "admin/product-page" });
+
+  pageLogger.info("admin.products.fetch.start", { page: page ?? "1" });
   try {
-    return await getAdminProducts({ page }, 0);
+    const data = await getAdminProducts({ page }, 0);
+    pageLogger.info("admin.products.fetch.success", {
+      page: page ?? "1",
+      count: data?.data?.length ?? 0,
+      totalPages: data?.totalPages ?? null,
+    });
+    return data;
   } catch (error) {
-    console.error("Error fetching admin products:", error);
+    pageLogger.error("admin.products.fetch.failed", {
+      page: page ?? "1",
+      error: serializeError(error),
+    });
     return null;
   }
 };
 
 const Products = async ({ searchParams }: Props) => {
+  const pageLogger = logger.child({ scope: "admin/product-page" });
   const products = await getData(searchParams?.page);
+  pageLogger.debug("admin.products.render", {
+    page: searchParams?.page ?? "1",
+    hasProducts: !!products?.data?.length,
+  });
 
   if (!products || products?.data?.length === 0) {
     return (

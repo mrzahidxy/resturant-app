@@ -1,5 +1,6 @@
 import { TMenuItem } from "@/types/category";
 import { TProduct } from "@/types/product";
+import { createRequestId, createTimer, logger, serializeError } from "@/utils/logger";
 
 export type Fetcher = typeof fetch;
 
@@ -17,6 +18,7 @@ type ApiErrorDetails = {
 
 const DEFAULT_REVALIDATE = 3600;
 const DEFAULT_NO_CACHE = 0;
+const apiLogger = logger.child({ scope: "lib/api" });
 
 const getBaseUrl = () => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -63,11 +65,23 @@ const fetchJson = async <T>(path: string, options: FetchJsonOptions = {}) => {
   const { fetcher = fetch, init, revalidate = DEFAULT_REVALIDATE } = options;
   const baseUrl = getBaseUrl();
   const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  const requestId = createRequestId();
+  const getDuration = createTimer();
+  const method = init?.method ?? "GET";
+
+  apiLogger.info("api.request.start", {
+    requestId,
+    method,
+    path,
+    url,
+    revalidate,
+  });
 
   const res = await fetcher(url, {
     ...init,
     headers: {
       "Content-Type": "application/json",
+      "x-request-id": requestId,
       ...(init?.headers ?? {}),
     },
     next: { revalidate },
@@ -75,14 +89,44 @@ const fetchJson = async <T>(path: string, options: FetchJsonOptions = {}) => {
 
   if (!res.ok) {
     const body = await safeReadText(res);
+    apiLogger.warn("api.request.error_response", {
+      requestId,
+      method,
+      path,
+      url,
+      status: res.status,
+      durationMs: getDuration(),
+      bodyPreview: body.slice(0, 300),
+    });
     throw new ApiError("Failed to fetch data", {
       status: res.status,
       url,
       body,
     });
   }
-
-  return (await res.json()) as T;
+  try {
+    const data = (await res.json()) as T;
+    apiLogger.info("api.request.success", {
+      requestId,
+      method,
+      path,
+      url,
+      status: res.status,
+      durationMs: getDuration(),
+    });
+    return data;
+  } catch (error) {
+    apiLogger.error("api.request.parse_failed", {
+      requestId,
+      method,
+      path,
+      url,
+      status: res.status,
+      durationMs: getDuration(),
+      error: serializeError(error),
+    });
+    throw error;
+  }
 };
 
 export const createApiClient = (fetcher: Fetcher = fetch) => ({

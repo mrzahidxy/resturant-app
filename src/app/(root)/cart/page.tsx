@@ -1,5 +1,6 @@
 "use client";
 
+import { createRequestId, logger, serializeError } from "@/utils/logger";
 import { useCartStore } from "@/utils/store";
 import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
@@ -8,6 +9,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const cartPageLogger = logger.child({ scope: "cart-page" });
+
 const CartPage = () => {
   const { products, totalItems, totalPrice, removeFromCart } = useCartStore();
   const { data: session } = useSession();
@@ -15,32 +18,62 @@ const CartPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (body: any) => {
+      const requestId = createRequestId();
+      cartPageLogger.info("cart.checkout.order_create.request", {
+        requestId,
+        totalItems: body?.products?.length ?? 0,
+        price: body?.price ?? null,
+        userEmail: body?.userEmail ?? null,
+      });
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/orders`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "x-request-id": requestId,
           },
           body: JSON.stringify(body),
         }
       );
 
+      cartPageLogger.info("cart.checkout.order_create.response", {
+        requestId,
+        status: response.status,
+      });
+
       return response.json();
     },
 
     onSuccess: (data) => {
+      cartPageLogger.info("cart.checkout.order_create.success", {
+        orderId: data?.id ?? null,
+      });
       toast.success("Order is created successfully");
       push(`/pay/${data?.id}`);
     },
     onError: (error) => {
-      toast.success("Something went wrong");
+      cartPageLogger.error("cart.checkout.order_create.failed", {
+        error: serializeError(error),
+      });
+      toast.error("Something went wrong");
     },
   });
 
 
   const handleCheckout = async () => {
+    cartPageLogger.info("cart.checkout.started", {
+      totalItems,
+      totalPrice,
+      cartProductsCount: products.length,
+      userEmail: session?.user?.email ?? null,
+    });
+
     if (!session) {
+      cartPageLogger.warn("cart.checkout.unauthenticated_redirect", {
+        totalItems,
+        totalPrice,
+      });
       push("auth/login");
       return;
     }
@@ -54,10 +87,18 @@ const CartPage = () => {
       };
 
       await mutate(paylaod);
+      cartPageLogger.info("cart.checkout.clear_cart.start", {
+        itemsToRemove: products.length,
+      });
 
       products.forEach((item) => removeFromCart(item));
+      cartPageLogger.info("cart.checkout.clear_cart.done", {
+        removedCount: products.length,
+      });
     } catch (error) {
-      console.log(error);
+      cartPageLogger.error("cart.checkout.failed", {
+        error: serializeError(error),
+      });
       toast.error("An error occurred during checkout. Please try again.");
     }
   };
@@ -124,7 +165,15 @@ const CartPage = () => {
 
                   <button
                     className="ui-btn ui-btn-ghost ui-btn-sm self-start rounded-xl px-3 py-2 sm:self-center"
-                    onClick={() => removeFromCart(item)}
+                    onClick={() => {
+                      cartPageLogger.info("cart.item.remove_clicked", {
+                        productId: item?.id,
+                        title: item?.title,
+                        quantity: item?.quantity,
+                        price: item?.price,
+                      });
+                      removeFromCart(item);
+                    }}
                     aria-label={`Remove ${item?.title} from cart`}
                   >
                     Remove
